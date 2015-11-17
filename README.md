@@ -1,2 +1,2 @@
 # Math2605Project
-Project for Math 2605
+Calc 3 for CS project
