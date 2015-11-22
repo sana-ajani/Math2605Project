@@ -1,10 +1,6 @@
 import numpy as np
 import random
 
-def trace(matrixA):
-    return matrixA[0][0] + matrixA[1][1]
-
-
 def determinant(matrixA):
     a = matrixA[0][0]
     b = matrixA[0][1]
@@ -20,6 +16,11 @@ def invert(matrixA):
     d = matrixA[1][1]
 
     return ((1 / determinant(matrixA)) * np.array([[d, -b], [-c, a]]))
+
+
+def trace(matrixA):
+    return matrixA[0][0] + matrixA[1][1]
+
 
 
 def create_matrix():
