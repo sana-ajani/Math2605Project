@@ -2,6 +2,9 @@
 
 import numpy as np
 import math
+import csv
+
+print "Running the LU Decomposition's main method: {}".format(__name__)
 
 pascalMatrix = np.zeros((0, 0), dtype = "float64")
 lMatrix = np.zeros((0, 0))
@@ -24,6 +27,7 @@ def lu_fact(pascalMatrix):
     lMatrix = np.zeros((pascalMatrix.shape[0], pascalMatrix.shape[1]), dtype = "float64") 
     uMatrix = np.zeros((pascalMatrix.shape[0], pascalMatrix.shape[1]), dtype = "float64")
     luMatrix = np.zeros((pascalMatrix.shape[0], pascalMatrix.shape[1]), dtype = "float64")
+    errorMatrix = np.zeros((pascalMatrix.shape[0], pascalMatrix.shape[0]), dtype = "float64")
 
     sumOfCollumn = 0
     errorValue = 0
@@ -35,9 +39,14 @@ def lu_fact(pascalMatrix):
         for j in range(pascalMatrix.shape[1]):
             uMatrix[i, j] = pascalMatrix[i, j]
 
+
+
     # Adds one to the diagonal of the L Matrix
     for i in range(pascalMatrix.shape[0]):
         lMatrix[i, i] = 1
+
+
+
 
     # This nested for loop does the L, U decomposition
     for i in range(pascalMatrix.shape[1] - 1):
@@ -47,14 +56,31 @@ def lu_fact(pascalMatrix):
             uMatrix[j,i] = 0
 
 
+    # multiplies the L and U matrix together
     for i in range(pascalMatrix.shape[0]):
         for j in range(pascalMatrix.shape[1]):
             luMatrix[i, j] = np.dot(lMatrix[i, :], uMatrix[:, j])
 
+
+
+    # Finds the error of ||LU - A||
+    errorMatrix = luMatrix - pascalMatrix
+
+    for i in range(errorMatrix.shape[0]):
+        for j in range(errorMatrix.shape[1]):
+            if (errorValue < errorMatrix[i, j]):
+                errorValue = errorMatrix[i, j]
+
+    print "Here we have the matrix passed"
     print pascalMatrix
+    print "Here we have the L matrix"
     print lMatrix
+    print "Here we have the U matrix"
     print uMatrix
-    print luMatrix
+    print "Here we have the Error matrix LU - A"
+    print errorMatrix
+    print "Here we have the Error value ||LU - A||"
+    print errorValue
     return lMatrix, uMatrix
 
 def solve_lu_b(pascalMatrix):
@@ -63,15 +89,42 @@ def solve_lu_b(pascalMatrix):
 
     xVector = np.zeros((1, pascalMatrix.shape[0]), dtype = "float64")
     yVector = np.zeros((1, pascalMatrix.shape[0]), dtype = "float64")
-    bVector = np.zeros((1,pascalMatrix.shape[0]))
+    errorVector = np.zeros((1, pascalMatrix.shape[0]), dtype = "float64")
+    bVector = np.zeros((1, pascalMatrix.shape[0]))
+    pxVector = np.zeros((1, pascalMatrix.shape[0]), dtype = "float64")
+
+    lMatrix = np.zeros((pascalMatrix.shape[0], pascalMatrix.shape[1]), dtype = "float64")
+    uMatrix = np.zeros((pascalMatrix.shape[0], pascalMatrix.shape[1]), dtype = "float64")
+    errorMatrix = np.zeros((pascalMatrix.shape[0], pascalMatrix.shape[1]), dtype = "float64")
+    luSolMatrix = np.zeros((pascalMatrix.shape[0], pascalMatrix.shape[1]), dtype = "float64")
+
     x = pascalMatrix.shape[0] - 1
     y = pascalMatrix.shape[1] - 1
+    pxError = 0
+    errorValue = 0
     counter = 0
     sumValues = 0
+
+
+
+    # put all elements of lSolMatrix into lMatrix, so we have a copy of the l matrix
+    # done in lu_fact for future use
+    for i in range(pascalMatrix.shape[0]):
+        for j in range(pascalMatrix.shape[1]):
+            uMatrix[i, j] = uSolMatrix[i, j]
+
+
+    # do the same for uSolMatrix into uMatrix
+    for i in range(pascalMatrix.shape[0]):
+        for j in range(pascalMatrix.shape[1]):
+            lMatrix[i, j] = lSolMatrix[i, j]
 
     # Makes a b vector whose entries are (1, 1/2, 1/3 .... 1/n)
     for i in range(bVector.shape[1]):
         bVector[0, i] = 1/ float (i + 1)
+
+
+
 
     # Makes the solution for Ly = b
     for i in range(pascalMatrix.shape[0]):
@@ -83,10 +136,12 @@ def solve_lu_b(pascalMatrix):
             sumValues -= lSolMatrix[i, j]
         yVector[0, i] = sumValues
         counter += 1
-    print yVector
 
     counter = 0
     sumValues = 0
+
+
+
 
     # Makes the solution for Ux = y
     while (x >= 0):
@@ -101,6 +156,44 @@ def solve_lu_b(pascalMatrix):
         xVector[0, x] = sumValues
         y -= 1
         x -= 1
-    print xVector
 
-solve_lu_b(pascal_matrix(4))
+
+
+
+    # Calculates the error of ||LU - P||
+    for i in range(pascalMatrix.shape[0]):
+        for j in range(pascalMatrix.shape[1]):
+            luSolMatrix[i, j] = np.dot(lMatrix[i, :], uMatrix[:, j])
+    errorMatrix = luSolMatrix - pascalMatrix       
+
+    for i in range(errorMatrix.shape[0]):
+        for j in range(errorMatrix.shape[1]):
+            if (errorValue < errorMatrix[i, j]):
+                errorValue = errorMatrix[i, j]
+
+    # Calculates the error of ||Px - b||
+    for i in range(pascalMatrix.shape[0]):
+        pxVector[0, i] = np.dot(luSolMatrix[i, :], xVector[0, :])
+
+    errorVector = pxVector - bVector
+
+    for i in range(pxVector.shape[1]):
+        pxError += ((errorVector[0, i]) ** 2)
+    pxError = math.sqrt(pxError)
+
+
+    print "Here is the solution to the Px = b"
+    print xVector
+    print "Here is the error value of ||LU - P||"
+    print errorValue
+    print "Here is the error value of ||Px - b||"
+    print pxError
+
+def main():
+    pascalMatrix = np.zeros((0, 0), dtype = "float64")
+    lMatrix = np.zeros((0, 0))
+    uMatrix = np.zeros((0, 0))
+    solve_lu_b(pascal_matrix(3))
+
+if __name__ == '__main__':
+    main()
