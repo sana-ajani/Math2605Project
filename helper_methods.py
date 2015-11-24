@@ -1,6 +1,5 @@
 import numpy as np
 import math
-import random
 
 def determinant(matrixA):
     a = matrixA[0][0]
@@ -15,22 +14,14 @@ def invert(matrixA):
     b = matrixA[0][1]
     c = matrixA[1][0]
     d = matrixA[1][1]
+    inverse = np.array([[d, -b], [-c, a]])
 
-    return ((1 / determinant(matrixA)) * np.array([[d, -b], [-c, a]]))
+    return ((1 / determinant(matrixA)) * inverse)
 
 
 def trace(matrixA):
     return matrixA[0][0] + matrixA[1][1]
 
-def create_matrix():
-    matrix = create_random_matrix(-2, 2)
-    if not determinant(matrix):
-        return create_matrix()
-    return matrix
-
-
-def create_random_matrix(low, high):
-    return [[random.uniform(low, high) for i in range(2)] for j in range(2)]
 
 #find the max value in matrix
 def find_max(A):

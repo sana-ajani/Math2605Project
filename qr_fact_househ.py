@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from helper_methods import *
+from solve_qr_b import *
 
 def make_h(c):
     height = len(c)
@@ -40,6 +41,7 @@ def qr_fact_househ(matrixA):
         Q = np.dot(I, Q)
 
     R = np.dot(Q, matrixA)
+
     return Q.T, R
 
 A = np.array([[12, -51, 4], [6, 167, -68], [-4, 24, -41]])
