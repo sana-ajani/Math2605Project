@@ -19,7 +19,7 @@ def jacobi_iter(xVector, e, maximumIteration):
     totalApprox = np.array([0.0, 0.0, 0.0])
     randomVector = np.array([0.0, 0.0, 0.0])
 
-    averageNumIteration = 0
+    jacNumIteration = 0
 
     errorVector = np.zeros((1, aMatrix.shape[1]), dtype = "float64")
     errorApprox = 0
@@ -68,7 +68,7 @@ def jacobi_iter(xVector, e, maximumIteration):
                 iterationFileWriter = csv.writer(iterationFile)
                 iterationFileWriter.writerow([randomVector, initialApprox, counter])
             iterationFile.close()
-        averageNumIteration += counter
+        jacNumIteration += counter
     for y in range(3):
         totalApprox[y] = totalApprox[y] / float (numRandomVectors)
 
@@ -78,14 +78,15 @@ def jacobi_iter(xVector, e, maximumIteration):
         errorApprox += ((errorVector[i]) ** 2)
     errorApprox = math.sqrt(errorApprox)
 
-    averageNumIteration = averageNumIteration / float (numRandomVectors)
+    jacNumIteration = jacNumIteration / float (numRandomVectors)
 
     print "Jacobi iteration:"
     print "Solution from the last randomly generated x Vector:"
     print xVector
     print(counter, " Iterations")
     print ("Average Error Aprroximation: ", errorApprox)
-    print ("Average Number of Iterations: ", averageNumIteration)
+    print ("Average Number of Iterations: ", jacNumIteration)
+    return jacNumIteration
 
 #Iterative Method using Gauss-Seidel Iterative Method
 
@@ -104,7 +105,7 @@ def gs_iter(xVector, e, maximumIteration):
     totalApprox = np.array([0.0, 0.0, 0.0])
     randomVector = np.array([0.0, 0.0, 0.0])
 
-    averageNumIteration = 0
+    gsNumIteration = 0
 
     errorApprox = 0
     lowerSumVector = np.zeros_like(xApprox)
@@ -160,7 +161,7 @@ def gs_iter(xVector, e, maximumIteration):
                 iterationFileWriter = csv.writer(iterationFile)
                 iterationFileWriter.writerow([randomVector, initialApprox, counter])
             iterationFile.close()
-        averageNumIteration += counter
+        gsNumIteration += counter
     for y in range(3):
         totalApprox[y] = totalApprox[y] / float (numRandomVectors)
 
@@ -170,15 +171,15 @@ def gs_iter(xVector, e, maximumIteration):
         errorApprox += ((errorVector[i]) ** 2)
     errorApprox = math.sqrt(errorApprox)
 
-    averageNumIteration = averageNumIteration / float (numRandomVectors)
+    gsNumIteration = gsNumIteration / float (numRandomVectors)
 
     print "Gauss-Seidel Iteration"
     print "Solution from the last randomly generated x Vector:"
     print xVector
     print(counter, " Iterations")
     print ("Average Error Aprroximation: ", errorApprox)
-    print ("Average Number of Iterations: ", averageNumIteration)
-
+    print ("Average Number of Iterations: ", gsNumIteration)
+    return gsNumIteration
 
 
 
@@ -194,8 +195,11 @@ def main():
     e = 0.00005
     maximumIteration = 100
 
-    jacobi_iter(xVector, e, maximumIteration)
-    gs_iter(xVector, e, maximumIteration)
+    jacNumIteration = jacobi_iter(xVector, e, maximumIteration)
+    gsNumIteration = gs_iter(xVector, e, maximumIteration)
+
+    print "The ratio of the M jacobi iterations and the M Gauss-Seidel iterations is:"
+    print jacNumIteration / float(gsNumIteration)
 
 if __name__ == '__main__':
     main()
