@@ -1,8 +1,6 @@
 import numpy as np
 import math
 from helper_methods import *
-from solve_qr_b import *
-
 
 def make_h(c):
     height = len(c)
