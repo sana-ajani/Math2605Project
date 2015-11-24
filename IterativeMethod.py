@@ -36,8 +36,12 @@ def jacobi_iter(xVector, e, maximumIteration):
 
     for x in range(numRandomVectors):
         xVector = np.random.random((3,1))
+        initialApprox = 0
         for i in range(3):
             randomVector[i] = xVector[i, 0]
+        for i in range(3):
+            initialApprox += ((randomVector[i] - xExact[i]) ** 2)
+        initialApprox = math.sqrt(initialApprox)
         xApprox = np.array([0.0, 0.0, 0.0])
         for i in range(maximumIteration):
             counter = i
@@ -62,7 +66,7 @@ def jacobi_iter(xVector, e, maximumIteration):
         else:
             with open("Jacobi Method results.csv", "a") as iterationFile:
                 iterationFileWriter = csv.writer(iterationFile)
-                iterationFileWriter.writerow([randomVector, xApprox, counter])
+                iterationFileWriter.writerow([randomVector, initialApprox, counter])
             iterationFile.close()
         averageNumIteration += counter
     for y in range(3):
@@ -116,9 +120,13 @@ def gs_iter(xVector, e, maximumIteration):
     iterationFile.close()
 
     for x in range(numRandomVectors):
+        initialApprox = 0
         xVector = np.random.random((3,1))
         for i in range(3):
             randomVector[i] = xVector[i, 0]
+        for i in range(3):
+            initialApprox += ((randomVector[i] - xExact[i]) ** 2)
+        initialApprox = math.sqrt(initialApprox)
         xApprox = np.array([0.0, 0.0, 0.0])
         for i in range(maximumIteration):
             counter = i
@@ -150,11 +158,11 @@ def gs_iter(xVector, e, maximumIteration):
         else:
             with open("Gauss-Seidel Method results.csv", "a") as iterationFile:
                 iterationFileWriter = csv.writer(iterationFile)
-                iterationFileWriter.writerow([randomVector, xApprox, counter])
+                iterationFileWriter.writerow([randomVector, initialApprox, counter])
             iterationFile.close()
         averageNumIteration += counter
     for y in range(3):
-        xApprox[y] = xApprox[y] / float (numRandomVectors)
+        totalApprox[y] = totalApprox[y] / float (numRandomVectors)
 
     errorVector = xApprox - xExact
 
