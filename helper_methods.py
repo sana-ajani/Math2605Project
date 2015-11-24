@@ -39,3 +39,6 @@ def find_max(A):
             if A[i,j] > B:
                 B = A[i,j]
     return B
+
+def norm(x):
+    return math.sqrt(np.sum([x[i] ** 2 for i in range(len(x))]))
