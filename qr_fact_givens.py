@@ -1,19 +1,21 @@
 import numpy as np
 import math
-from numpy.linalg import qr
 from helper_methods import *
+from solve_qr_b import *
+
 
 def make_givens(R, a, b):
+    #a and b will be tuples (x, y)
     i, j = a
     m, n = b
     base = R[i][j]
     val = R[m][n]
 
     if b != 0:
-        cos = float(base) / math.sqrt(base ** 2 + val ** 2)
-        sin = float(val) / math.sqrt(base ** 2 + val ** 2)
+        cosX = float(base) / math.sqrt(base ** 2 + val ** 2)
+        sinX = float(val) / math.sqrt(base ** 2 + val ** 2)
 
-    return cos, sin
+    return cosX, sinX
 
 
 def qr_fact_givens(matrixA):
@@ -22,20 +24,21 @@ def qr_fact_givens(matrixA):
     for y in range(matrixA.shape[1]):
         for num in range(matrixA.shape[0]):
             if y is num:
-                pivot_xy = (num, y)
-            if y < num and R[num, y]:
+                pivot = (num, y)
+            if y < num:
                 identity = np.eye(matrixA.shape[0])
-                cos, sin = make_givens(R, pivot_xy, (num, y))
-                identity[num][num] = cos
-                identity[y][y] = cos
-                identity[y][num] = sin
-                identity[num][y] = -sin
+                cosX, sinX = make_givens(R, pivot, (num, y))
+                identity[num][num] = cosX
+                identity[y][y] = cosX
+                identity[y][num] = sinX
+                identity[num][y] = -sinX
                 R = mult(identity, R)
                 Q = Q.dot(identity.T)
 
     errorMatrix = mult(Q,R) - A
     maximum = find_max(errorMatrix)
-    return Q, R, maximum
+    #x0 = solve_qr_b(Q, R, b)
+    return Q, R, maximum #x0
 
 A = np.array([[1, 1, 1, 1], [1, 2, 3, 4], [1, 3, 6, 10], [1, 4, 10, 20]])
 b = np.array([[1, 1/2, 1/3, 1/4]])
@@ -43,3 +46,4 @@ Q, R, maximum = qr_fact_givens(A)
 print ("Q: ", Q)
 print ("R ", R)
 print("max", maximum)
+#print("x0:", x0)

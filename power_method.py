@@ -14,10 +14,10 @@ tol = 0.001
 initEig = np.array([[1],[1]])
 
 def power_method(A, tol, initEig):
-        return power_method_calculations(A, tol, initEig, initEig[0,0], 0)
+        return power_method_calc(A, tol, initEig, initEig[0,0], 0)
 
 #recursive power method function that performs all the calculations and increments an iterator
-def power_method_calculations(matrixA, tol, initVect, initVal, num_iters):
+def power_method_calc(matrixA, tol, initVect, initVal, num_iters):
     num_iters += 1
     if num_iters >= 100:
         return None
@@ -27,9 +27,8 @@ def power_method_calculations(matrixA, tol, initVect, initVal, num_iters):
     err = abs(find_max(nextVect) - find_max(vect))
     #check to see if the calculated tolerance is greater than the tolerance passed in
     if err > tol:
-        return power_method_calculations(A, tol, result, initVect[0,0], num_iters)
+        return power_method_calc(A, tol, result, initVect[0,0], num_iters)
     #if not, print the number of iterations, max eigenvalue, eigenvector
     print("number of iterations:", num_iters, "eigenvalue:", find_max(nextVect), "eigenvector:", nextVect)
-
 
 power_method(A, tol, initEig)
