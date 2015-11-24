@@ -16,7 +16,7 @@ def jacobi_iter(xVector, e, maximumIteration):
 
     bVector = np.array([0.1, 0.1, 0.1])
     xExact = np.array([9/float (190), 28/float (475), 33/float (475)])
-    xApprox = np.array([0.0, 0.0, 0.0])
+    totalApprox = np.array([0.0, 0.0, 0.0])
 
 
     errorVector = np.zeros((1, aMatrix.shape[1]), dtype = "float64")
@@ -28,16 +28,13 @@ def jacobi_iter(xVector, e, maximumIteration):
 
     with open("Jacobi Method results", "w") as iterationFile:
         iterationFileWriter = csv.writer(iterationFile)
+        iterationFileWriter.writerow(["The Random Vectors", "Approximations of said vectors", "Number of Iterations"])
         
     iterationFile.close()
 
     for x in range(numRandomVectors):
         xVector = np.random.random((3,1))
-        # Here we write the xVector into the csv file
-        with open("Jacobi Method results", "a") as iterationFile:
-            iterationFileWriter = csv.writer(iterationFile)
-            iterationFileWriter.writerow([xVector])
-        iterationFile.close()
+        xApprox = np.array([0.0, 0.0, 0.0])
         for i in range(maximumIteration):
             counter = i
             changedXVector = np.zeros_like(xVector)
@@ -52,15 +49,19 @@ def jacobi_iter(xVector, e, maximumIteration):
                 enoughIteration = True
                 break
             xVector = changedXVector
-        for z in range (3):
+        for z in range(3):
             xApprox[z] += changedXVector[z]
+        for i in range(3):
+            totalApprox[i] += xApprox[i]
         if (not enoughIteration):
             print("Need more Iterations!")
         else:
-            # Here write the number of iterations and approximation
-            continue
+            with open("Jacobi Method results", "a") as iterationFile:
+                iterationFileWriter = csv.writer(iterationFile)
+                iterationFileWriter.writerow([xVector, xApprox, counter])
+            iterationFile.close()
     for y in range(3):
-        xApprox[y] = xApprox[y] / float (numRandomVectors)
+        totalApprox[y] = totalApprox[y] / float (numRandomVectors)
 
     errorVector = xApprox - xExact
 
@@ -99,16 +100,12 @@ def gs_iter(xVector, e, maximumIteration):
 
     with open("Gauss-Seidel Method results", "w") as iterationFile:
         iterationFileWriter = csv.writer(iterationFile)
+        iterationFileWriter.writerow(["The Random Vectors", "Approximations of said vectors", "Number of Iterations"])
 
     iterationFile.close()
 
     for x in range(numRandomVectors):
         xVector = np.random.random((3,1))
-        # Here we write the xVector into the csv file
-        with open("Gauss-Seidel Method results", "a") as iterationFile:
-            iterationFileWriter = csv.writer(iterationFile)
-            iterationFileWriter.writerow([xVector])
-        iterationFile.close()
 
         for i in range(maximumIteration):
             counter = i
@@ -136,8 +133,10 @@ def gs_iter(xVector, e, maximumIteration):
         if (not enoughIteration):
             print("Need more Iterations!")
         else:
-            # Here write the number of iterations and approximation
-            continue
+            with open("Gauss-Seidel Method results", "a") as iterationFile:
+                iterationFileWriter = csv.writer(iterationFile)
+                iterationFileWriter.writerow([xVector, xApprox, counter])
+            iterationFile.close()
     for y in range(3):
         xApprox[y] = xApprox[y] / float (numRandomVectors)
 
