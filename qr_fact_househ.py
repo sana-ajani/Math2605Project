@@ -3,6 +3,7 @@ import math
 from helper_methods import *
 from solve_qr_b import *
 
+
 def make_h(c):
     height = len(c)
     mat = np.eye(height, 1)
@@ -38,13 +39,19 @@ def qr_fact_househ(matrixA):
             for c in range(reverse.shape[1]):
                 I[I.shape[0] - r - 1, I.shape[1] - c - 1] = reverse[r, c]
 
-        Q = np.dot(I, Q)
+        Q = mult(I, Q)
 
-    R = np.dot(Q, matrixA)
+    R = mult(Q, matrixA)
 
-    return Q.T, R
+    errorMatrix = np.dot(Q, R) - A
+    maximum = find_max(errorMatrix)
+    #x0 = solve_qr_b(Q, R, b)
 
-A = np.array([[12, -51, 4], [6, 167, -68], [-4, 24, -41]])
-Q, R = qr_fact_househ(A)
+    return Q.T, R, maximum
+
+A = np.array([[1, 1, 1, 1], [1, 2, 3, 4], [1, 3, 6, 10], [1, 4, 10, 20]])
+b = np.array([[1, 1/2, 1/3, 1/4]])
+Q, R, maximum = qr_fact_househ(A)
 print ("Q: ", Q)
 print ("R ", R)
+print("max", maximum)

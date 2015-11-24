@@ -32,5 +32,4 @@ def power_method_calculations(matrixA, tol, initVect, initVal, num_iters):
     print("number of iterations:", num_iters, "eigenvalue:", find_max(nextVect), "eigenvector:", nextVect)
 
 
-
 power_method(A, tol, initEig)

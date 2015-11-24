@@ -34,3 +34,13 @@ def find_max(A):
 
 def norm(x):
     return math.sqrt(np.sum([x[i] ** 2 for i in range(len(x))]))
+
+def mult(A, B):
+    D = np.zeros((A.shape[0],B.shape[1]))
+    for i in range(A.shape[0]):
+        for j in range(B.shape[1]):
+            rows = A[i,:] #leftRows
+            cols = B[:,j] #rightColumns
+            c = np.dot(rows, cols)
+            D[i,j] = c
+    return D

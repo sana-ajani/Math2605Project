@@ -1,50 +1,51 @@
 import numpy as np
 import math
+from numpy.linalg import qr
 from helper_methods import *
+from solve_qr_b import *
 
-
-def givens(R, a, b):
+def make_givens(R, a, b):
     i, j = a
     m, n = b
-    base = R[i][j]
-    second = R[m][n]
+    val_a = R[i][j]
+    val_b = R[m][n]
 
-    if b != 0:
-        cos = float(base) / math.sqrt(base**2 + second**2)
-        sin = float(second) / math.sqrt(base**2 + second**2)
-
+    if b is 0:
+        c = 1
+        s = 0
     else:
-        cos = 1
-        sin = 0
-    return cos, sin
-
-    identity = np.eye(A.shape[0])
+        r = math.sqrt(val_a**2 + val_b**2)
+        c = val_a / r
+        s = val_b / r
+    return c, s
 
 
 def qr_fact_givens(matrixA):
-    copyA = np.copy(matrixA)
-    m = copyA.shape[0]
-    n = copyA.shape[1]
+    m, n = matrixA.shape
     Q = np.eye(m)
-    R = copyA
-    gList = []
-    G = 0
-    for i in range(m):
-        for j in range(n):
+    R = matrixA
+    for i in range(n):
+        for j in range(m):
             if i is j:
                 pivot_xy = (j, i)
             if i < j and R[j, i]:
-                identity = np.eye(m)
-                cos, sin = givens(R, pivot_xy, (j, i))
-                identity[j][j] = cos
-                identity[i][i] = cos
-                identity[i][j] = sin
-                identity[j][i] = -sin
-                G = identity
-                gList.append(identity)
-                R = np.dot(identity, R)
-    for g in gList:
-        gT = g.transpose()
-        Q = np.dot(Q,gT)
+                G = np.eye(m)
+                c,s = givens_rotation(R, pivot_xy, (j, i))
+                G[j][j] = c
+                G[i][i] = c
+                G[i][j] = s
+                G[j][i] = -s
 
-    return Q, R
+                R = np.dot(G, R)
+                Q = Q.dot(G.T)
+
+    errorMatrix = mult(Q,R) - A
+    maximum = find_max(errorMatrix)
+    return Q, R, maximum
+
+A = np.array([[1, 1, 1, 1], [1, 2, 3, 4], [1, 3, 6, 10], [1, 4, 10, 20]])
+b = np.array([[1, 1/2, 1/3, 1/4]])
+Q, R, maximum = qr_fact_givens(A)
+print ("Q: ", Q)
+print ("R ", R)
+print("max", maximum)
