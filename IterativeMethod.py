@@ -4,12 +4,14 @@ import numpy as np
 
 #Iterative Method using Jacobi's Iterative Method
 
-def jacobi_iter():
-    num2 = float (2)
-    num3 = float (3)
-    num4 = float (4)
+num2 = float (2)
+num3 = float (3)
+num4 = float (4)
 
-    aMatrix = np.array([[1, 1/num2, 1/num3], [1/num2, 1, 1/num4], [1/num3, 1/num4, 1]])
+aMatrix = np.array([[1, 1/num2, 1/num3], [1/num2, 1, 1/num4], [1/num3, 1/num4, 1]])
+
+def jacobi_iter(aMatrix):
+
     bVector = np.array([0.1, 0.1, 0.1])
     xExact = np.array([9/float (190), 28/float (475), 33/float (475)])
     xApprox = np.array([0.0, 0.0, 0.0])
@@ -52,12 +54,8 @@ def jacobi_iter():
 
 #Iterative Method using Gauss-Seidel Iterative Method
 
-def gs_iter():
-    num2 = float (2)
-    num3 = float (3)
-    num4 = float (4)
+def gs_iter(aMatrix):
 
-    aMatrix = np.array([[1, 1/num2, 1/num3], [1/num2, 1, 1/num4], [1/num3, 1/num4, 1]])
     bVector = np.array([0.1, 0.1, 0.1])
     xExact = np.array([9/float (190), 28/float (475), 33/float (475)])
     xApprox = np.array([0.0, 0.0, 0.0])
@@ -105,4 +103,4 @@ def gs_iter():
     print "Approximation Error:"
     print(xApprox - xExact)
 
-gs_iter()
+gs_iter(aMatrix)
