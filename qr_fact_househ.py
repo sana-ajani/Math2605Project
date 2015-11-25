@@ -42,15 +42,15 @@ def qr_fact_househ(matrixA):
     R = mult(Q, matrixA)
 
     errorMatrix = np.dot(Q, R) - A
-    maximum = find_max(errorMatrix)
-    #x0 = solve_qr_b(Q, R, b)
+    error = find_max(errorMatrix)
+    x = solve_qr_b(Q, R, b)
 
-    return Q.T, R, maximum #x0
+    return Q.T, R, error, x
 
 A = np.array([[1, 1, 1, 1], [1, 2, 3, 4], [1, 3, 6, 10], [1, 4, 10, 20]])
 b = np.array([[1, 1/2, 1/3, 1/4]])
-Q, R, maximum = qr_fact_househ(A)
+Q, R, error, x = qr_fact_househ(A)
 print ("Q: ", Q)
 print ("R ", R)
-print("max", maximum)
-#print ("x0", x0)
+print("error ||QR - A||", error)
+print ("Ax = b", x)

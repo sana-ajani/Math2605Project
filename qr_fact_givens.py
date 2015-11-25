@@ -35,15 +35,22 @@ def qr_fact_givens(matrixA):
                 R = mult(identity, R)
                 Q = Q.dot(identity.T)
 
+    #error value of ||QR - A||
+    errorValue = 0
     errorMatrix = mult(Q,R) - A
-    maximum = find_max(errorMatrix)
-    #x0 = solve_qr_b(Q, R, b)
-    return Q, R, maximum #x0
+    for i in range(errorMatrix.shape[0]):
+        for j in range(errorMatrix.shape[1]):
+            if (errorValue < errorMatrix[i, j]):
+                errorValue = errorMatrix[i, j]
+
+    x = solve_qr_b(Q, R, b)
+    return Q, R, errorValue, x
 
 A = np.array([[1, 1, 1, 1], [1, 2, 3, 4], [1, 3, 6, 10], [1, 4, 10, 20]])
 b = np.array([[1, 1/2, 1/3, 1/4]])
-Q, R, maximum = qr_fact_givens(A)
+Q, R, errorValue, x = qr_fact_givens(A)
 print ("Q: ", Q)
 print ("R ", R)
-print("max", maximum)
+print ("the error ||QR - A||", errorValue)
+print ('solution to Ax = b', x)
 #print("x0:", x0)

@@ -32,3 +32,15 @@ def power_method_calc(matrixA, tol, initVect, initVal, num_iters):
     print("number of iterations:", num_iters, "eigenvalue:", find_max(nextVect), "eigenvector:", nextVect)
 
 power_method(A, tol, initEig)
+
+#def main():
+#    for x in range(1000):
+#        matrix = np.random.random(1000, 2)
+
+#    e = 0.00005
+#    max_iters = 100
+
+#    data = []
+#    for m in matrix:
+#        result = power_method(matrix, e, [1,1])
+#        data.append(result)

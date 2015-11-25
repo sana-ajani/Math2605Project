@@ -37,11 +37,12 @@ def norm(x):
 
 def mult(A, B):
     # rows of A, columns of B
-    D = np.zeros((A.shape[0], B.shape[1]))
-    for i in range(A.shape[0]):
-        for j in range(B.shape[1]):
-            rows = A[i,:] #leftRows
-            cols = B[:,j] #rightColumns
-            c = np.dot(rows, cols)
-            D[i,j] = c
-    return D
+    result = np.zeros((A.shape[0], B.shape[1]))
+    # rows of A
+    for i in range(len(A)):
+        # columns of B
+        for j in range(len(B[0])):
+            # rows of B
+            for k in range(len(B)):
+                result[i][j] += A[i][k] * B[k][j]
+    return result
