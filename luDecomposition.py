@@ -193,7 +193,7 @@ def solve_lu_b(pascalMatrix):
 
 def main():
 
-    with open("LU-Decomposition results.csv", "a") as LUFile:
+    with open("LU-Decomposition results.csv", "w") as LUFile:
         LUFileWriter = csv.writer(LUFile)
         LUFileWriter.writerow(["Dimension of Pascal Matrix", "||LU - P|| Error", "||Px - b|| Error"])
 
