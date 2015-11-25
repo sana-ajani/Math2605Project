@@ -71,14 +71,10 @@ def lu_fact(pascalMatrix):
             if (errorValue < errorMatrix[i, j]):
                 errorValue = errorMatrix[i, j]
 
-    print "Here we have the matrix passed"
-    print pascalMatrix
     print "Here we have the L matrix"
     print lMatrix
     print "Here we have the U matrix"
     print uMatrix
-    print "Here we have the Error matrix LU - A"
-    print errorMatrix
     print "Here we have the Error value ||LU - A||"
     print errorValue
     return lMatrix, uMatrix
@@ -181,8 +177,14 @@ def solve_lu_b(pascalMatrix):
         pxError += ((errorVector[0, i]) ** 2)
     pxError = math.sqrt(pxError)
 
+    with open("LU-Decomposition results.csv", "a") as LUFile:
+        LUFileWriter = csv.writer(LUFile)
+        LUFileWriter.writerow([pascalMatrix.shape[0], errorValue, pxError])
 
-    print "Here is the solution to the Px = b"
+    LUFile.close()
+
+
+    print "Here is the solution to the Px = b where x is:"
     print xVector
     print "Here is the error value of ||LU - P||"
     print errorValue
@@ -190,10 +192,22 @@ def solve_lu_b(pascalMatrix):
     print pxError
 
 def main():
+
+    with open("LU-Decomposition results.csv", "a") as LUFile:
+        LUFileWriter = csv.writer(LUFile)
+        LUFileWriter.writerow(["Dimension of Pascal Matrix", "||LU - P|| Error", "||Px - b|| Error"])
+
+    LUFile.close()
+
+    n = 12
+
     pascalMatrix = np.zeros((0, 0), dtype = "float64")
     lMatrix = np.zeros((0, 0))
     uMatrix = np.zeros((0, 0))
-    solve_lu_b(pascal_matrix(3))
+
+    for i in range(n):
+        print ("Pascal Matrix of dimension: ", i)
+        solve_lu_b(pascal_matrix(i + 1))
 
 if __name__ == '__main__':
     main()
